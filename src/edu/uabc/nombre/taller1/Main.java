@@ -1,6 +1,7 @@
 // ARCHIVO MAIN.C
 // PARA COMPILAR: javac Main.java
 // PARA EJECUTAR: java Main
+package src.edu.uabc.nombre.taller1;
 import java.util.Scanner;
 
 public class Main

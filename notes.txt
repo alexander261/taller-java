@@ -1,0 +1,2 @@
+javac -d bin -sourcepath src src/edu/uabc/nombre/taller1/*.java
+java -cp bin src.edu.uabc.nombre.taller1.Main
