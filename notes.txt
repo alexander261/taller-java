@@ -1,2 +1,8 @@
 javac -d bin -sourcepath src src/edu/uabc/nombre/taller1/*.java
 java -cp bin src.edu.uabc.nombre.taller1.Main
+
+javac -d bin -sourcepath src taller/taller1/*.java
+java -cp bin taller.taller1.Main
+
+Es divisible por 4, pero no por 100.
+Es divisible por 400. 
