@@ -6,3 +6,7 @@ java -cp bin taller.taller1.Main
 
 javac -d bin -sourcepath src laboratorio/practica1/*.java
 java -cp bin laboratorio.practica1.Main
+
+
+javac -d bin -sourcepath src taller/taller2/*.java
+java -cp bin taller.taller2.Main
