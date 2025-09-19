@@ -15,15 +15,6 @@ public class Main {
     public static void main(String[] args) {
 
         conjunto = new TreeSet<>(Persona.COMPARAR_NOMBRE());
-        // conjunto.add(new Persona("David", 22));
-        // conjunto.add(new Persona("Alberto", 28));
-        // conjunto.add(new Persona("Alberto", 44));
-        // conjunto.add(new Persona("Daniela", 31));
-        // conjunto.add(new Persona("Emma", 21));
-        // conjunto.add(new Persona("Ernesto", 26));
-        // conjunto.add(new Persona("Gabriel", 30));
-        // conjunto.add(new Persona("Jacky", 16));
-        // conjunto.add(new Persona("Julio", 17));
 
         menu();
     }
