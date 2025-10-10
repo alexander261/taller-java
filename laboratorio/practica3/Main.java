@@ -8,6 +8,9 @@ import java.util.Comparator;
 import java.util.NavigableSet;
 import java.util.TreeSet;
 
+import java.io.*;
+import java.util.*;
+
 public class Main {
     private static TreeSet<Usuario> usuarios;
     private static Scanner input;
@@ -16,30 +19,16 @@ public class Main {
 
     public static void main(String[] args) {
 
-        usuarios = new TreeSet<>(Usuario.COMPARAR_USUARIO());
-        // usuarios.add(
-        //         new Usuario(
-        //                 "alexander1",
-        //                 "lopez1",
-        //                 "correo1@correo.com",
-        //                 "username1",
-        //                 "password1"));
-        // usuarios.add(
-        //         new Usuario(
-        //                 "alexander2",
-        //                 "lopez2",
-        //                 "correo2@correo.com",
-        //                 "username2",
-        //                 "password2"));
+        crearFile();
 
-        //                         usuarios.add(
-        //         new Usuario(
-        //                 "nombre",
-        //                 "apellido",
-        //                 "correo",
-        //                 "username",
-        //                 "123"));
+        usuarios = new TreeSet<>(Usuario.COMPARAR_USUARIO());
+
+        deserializar();
+
         menu();
+
+        serializarLista();
+
     }
 
     public static void loginPorCorreo(String correo) {
@@ -66,14 +55,12 @@ public class Main {
         TreeSet<Usuario> listCorreosTemp = new TreeSet<>(Usuario.COMPARAR_CORREOS_LOGIN());
         listCorreosTemp.addAll(usuarios);
 
-
         boolean statusCorreo = listCorreosTemp.contains(new Usuario(
                 "nombre",
                 "apellido",
                 credencialUser,
                 "username",
                 credencialPassword));
-
 
         if (statusCorreo) {
 
@@ -96,7 +83,6 @@ public class Main {
                 "correo",
                 credencialUser,
                 credencialPassword));
-
 
         if (statusUsername) {
 
@@ -200,8 +186,6 @@ public class Main {
         return input.nextLine();
     }
 
-    
-
     public static void menu() {
         char opcion;
         input = new Scanner(System.in);
@@ -220,14 +204,20 @@ public class Main {
                     login();
                     break;
                 case '2':
+
+                    deserializar();
+
                     addUsuario();
+
+                    serializarLista();
+
                     break;
                 default:
                     break;
             }
         } while (opcion != '3');
-    }
 
+    }
 
     public static void menuSession() {
         char opcion;
@@ -248,9 +238,9 @@ public class Main {
             switch (opcion) {
                 case '1':
 
-                        System.out.println("\n********************************");
-                        System.out.println("SESSION CERRADA");
-                        System.out.println("********************************\n");
+                    System.out.println("\n********************************");
+                    System.out.println("SESSION CERRADA");
+                    System.out.println("********************************\n");
                     break;
                 case '2':
 
@@ -259,23 +249,32 @@ public class Main {
                     break;
 
                 case '3':
+                    deserializar();
 
                     updateNombre();
+                    serializarLista();
 
                     break;
                 case '4':
+                    deserializar();
+
                     updateApellido();
+                    serializarLista();
 
                     break;
                 case '5':
-                    
+                    deserializar();
+
                     updatePassword();
+                    serializarLista();
 
                     break;
                 case '6':
-    
-                    
+                    deserializar();
+
                     removeUsuarioSession();
+                    serializarLista();
+
                     opcion = '1';
 
                     break;
@@ -285,10 +284,10 @@ public class Main {
         } while (opcion != '1');
     }
 
-    public static void updateNombre(){
-               
+    public static void updateNombre() {
+
         Usuario user = buscarUsuarioSession();
-        if(user == null){
+        if (user == null) {
             return;
         }
 
@@ -300,12 +299,11 @@ public class Main {
         return;
     }
 
-    public static void updateApellido(){
+    public static void updateApellido() {
         Usuario user = buscarUsuarioSession();
-        if(user == null){
+        if (user == null) {
             return;
         }
-
 
         System.out.print("Apellido: ");
         String line = input.nextLine();
@@ -316,10 +314,10 @@ public class Main {
         System.out.println("Informacion Actualizada\n");
         return;
     }
-    
-    public static void updatePassword(){
+
+    public static void updatePassword() {
         Usuario user = buscarUsuarioSession();
-        if(user == null){
+        if (user == null) {
             return;
         }
 
@@ -350,10 +348,10 @@ public class Main {
         return null;
     }
 
-    public static void mostrarInfoUsuarioSession(){
-                       
+    public static void mostrarInfoUsuarioSession() {
+
         Usuario user = buscarUsuarioSession();
-        if(user == null){
+        if (user == null) {
             return;
         }
 
@@ -361,35 +359,110 @@ public class Main {
     }
 
     public static boolean removeUsuarioSession() {
-    Usuario user = buscarUsuarioSession();
-    if (user == null) {
-        return false;
+        Usuario user = buscarUsuarioSession();
+        if (user == null) {
+            return false;
+        }
+
+        boolean removed = usuarios.remove(user);
+        if (removed) {
+            System.out.println("\n********************************");
+            System.out.println("Cuenta eliminada correctamente");
+            System.out.println("********************************\n");
+            usernameSession = null;
+            correoSession = null;
+        } else {
+            System.out.println("No se pudo eliminar la cuenta.");
+        }
+        return removed;
     }
 
-    boolean removed = usuarios.remove(user);
-    if (removed) {
-        System.out.println("\n********************************");
-        System.out.println("Cuenta eliminada correctamente");
-        System.out.println("********************************\n");
-        usernameSession = null;
-        correoSession = null;
-    } else {
-        System.out.println("No se pudo eliminar la cuenta.");
-    }
-    return removed;
-}
-
-    public static void printUsuario(Usuario usuario){
-        System.out.println("Nombre : "+usuario.getNombre()+"");
-        System.out.println("Apellido : "+usuario.getApellido()+"");
-        System.out.println("Correo : "+usuario.getCorreo()+"");
-        System.out.println("Usuario : "+usuario.getUsername()+"");
-        System.out.println("Contrasenia : "+usuario.getPassword()+"");
+    public static void printUsuario(Usuario usuario) {
+        System.out.println("Nombre : " + usuario.getNombre() + "");
+        System.out.println("Apellido : " + usuario.getApellido() + "");
+        System.out.println("Correo : " + usuario.getCorreo() + "");
+        System.out.println("Usuario : " + usuario.getUsername() + "");
+        System.out.println("Contrasenia : " + usuario.getPassword() + "");
     }
 
     public static char selec_opcion() {
         // TRIM REMUEVE LOS ESPACIOS y CHARAT EXTRAE EL PRIMER CARACTER
         return input.next().trim().charAt(0);
     }
-    
+
+
+    public static void crearFile() {
+
+
+        String rutaArchivo = "Usuario.txt"; 
+
+
+        File archivo = new File(rutaArchivo);
+
+
+        if (archivo.exists()) {
+            return;
+        } 
+
+        try (FileOutputStream fos = new FileOutputStream("Usuario.txt");
+                ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+
+        } catch (Exception e) {
+
+            System.out.println("Archivo Creado");
+
+        }
+    }
+
+    public static void serializarLista() {
+
+        try (FileWriter fw = new FileWriter("Usuario.txt", false)) {
+
+            fw.write("");
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+        }
+
+        try (FileOutputStream fos = new FileOutputStream("Usuario.txt");
+                ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            // RECORRER LA LISTA DE USUARIOS
+            for (Usuario usuario : usuarios) {
+                // ESCRIBIR USUARIO EN ARCHIVO
+                oos.writeObject(usuario);
+            }
+            System.out.println("\nObjeto serializado exitosamente en Usuario.txt");
+
+            System.out.printf("\n LISTA: %s", usuarios);
+
+        } catch (IOException e) {
+            System.out.println("ERROR AL SERIALIZAR");
+            e.printStackTrace();
+        }
+    }
+
+    public static void deserializar() {
+
+        try (FileInputStream fis = new FileInputStream("Usuario.txt");
+                ObjectInputStream ois = new ObjectInputStream(fis)) {
+
+            Usuario usuario;
+
+            // LEER EL USUARIOS DEL ARCHIVO
+            while ((usuario = (Usuario) ois.readObject()) != null) {
+                // AGREGAR USUARIO A LISTA
+                usuarios.add(usuario);
+            }
+
+        } catch (EOFException e) {
+            // System.out.println("FIN DE ARCHIVO");
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("ERROR AL DESERIALIZAR");
+            e.printStackTrace();
+        }
+        System.out.printf("\n LISTA: %s", usuarios);
+    }
+
 }

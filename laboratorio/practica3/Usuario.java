@@ -7,8 +7,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.NavigableSet;
 import java.util.TreeSet;
+import java.io.Serializable;
 
-public class Usuario implements Comparable<Usuario>{
+public class Usuario implements Serializable,Comparable<Usuario>{
 
     private String nombre;
     private String apellido;
